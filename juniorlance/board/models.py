@@ -40,7 +40,7 @@ class Vacancy(models.Model):
 	name = models.CharField(max_length=128, verbose_name='Название вакансии')
 	recruter = models.ForeignKey(Dealer, verbose_name='Рекрутер')
 	info = models.TextField(max_length=MAX_VACANCY_INFO_LENGTH, verbose_name='Описание вакансии' )
-	job_kind = models.IntegerField(verbose_name='Тип вакансии', choices=JOB_KINDS )
+	job_kind = models.IntegerField(verbose_name='Тип оплаты', choices=JOB_KINDS )
 	location_kind = models.IntegerField(verbose_name='Требования к расположению', choices=LOCATION_KINDS )
 	location = models.ForeignKey('City',verbose_name='Город')
 	skills = models.ManyToManyField('Skill',verbose_name='Требования')
