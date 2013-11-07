@@ -25,27 +25,27 @@ class Dealer(models.Model):
 
 
 class Vacancy(models.Model):
-	# job_kinds = (
-	# 		(0,'За проект'),
-	# 		(1,'Почасовая'),
-	# 	)
-	# location_kinds = (
-	# 		(0,'На месте'),
-	# 		(1,'Удаленная'),
-	# 	)
-	# vacancy_states = (
-	# 		(0,'Активная')
-	# 		(1,'Снята')
-	# 	)
+	JOB_KINDS = (
+			(0,'За проект'),
+			(1,'Почасовая'),
+		)
+	LOCATION_KINDS = (
+			(0,'На месте'),
+			(1,'Удаленная'),
+		)
+	VACANCY_STATES = (
+			(0,'Активная'),
+			(1,'Снята'),
+		)
 	name = models.CharField(max_length=128, verbose_name='Название вакансии')
 	recruter = models.ForeignKey(Dealer, verbose_name='Рекрутер')
 	info = models.TextField(max_length=MAX_VACANCY_INFO_LENGTH, verbose_name='Описание вакансии' )
-	job_kind = models.IntegerField(verbose_name='Тип вакансии')
-	location_kind = models.IntegerField(verbose_name='Требования к расположению')
+	job_kind = models.IntegerField(verbose_name='Тип вакансии', choices=JOB_KINDS )
+	location_kind = models.IntegerField(verbose_name='Требования к расположению', choices=LOCATION_KINDS )
 	location = models.ForeignKey('City',verbose_name='Город')
 	skills = models.ManyToManyField('Skill',verbose_name='Требования')
 	cost = models.PositiveIntegerField(verbose_name='Цена', blank=True)
-	state = models.IntegerField(verbose_name='Статус')
+	state = models.IntegerField(verbose_name='Статус', choices=VACANCY_STATES )
 	expieres = models.DateTimeField(verbose_name='Строк окончания', blank=True)
 
 	def __unicode__(self):
@@ -53,31 +53,32 @@ class Vacancy(models.Model):
 
 
 class VacancyAppliement(models.Model):
-	# apply_states = (
-	# 		(0,'Не прочитаная'),
-	# 		(1,'Прочитаная')
-	# 		(2,'Отказанная')
-	# 	)
+	APPLY_STATES = (
+			(0,'Не прочитаная'),
+			(1,'Прочитаная'),
+			(2,'Отказанная'),
+			(3,'Выполненая'),
+		)
 	vacancy = models.ForeignKey(Vacancy,verbose_name='Вакансия')
 	dealer = models.ForeignKey(Dealer,verbose_name='Пользователь')
 	date = models.DateTimeField(verbose_name='Время отклика')
-	status = models.IntegerField(verbose_name='Статус')
+	status = models.IntegerField(verbose_name='Статус', choices=APPLY_STATES )
 
 	def __unicode__(self):
 		return self.date+':'+self.vacancy.name+'<->'+self.dealer.name
 
 
 class Message(models.Model):
-	# message_states = (
-	# 		(0,'Прочитанное'),
-	# 		(1,'Не прочитанное')
-	# 	)
+	MESSAGE_STATES = (
+			(0,'Прочитанное'),
+			(1,'Не прочитанное'),
+		)
 	message_box = models.ForeignKey(Dealer, related_name='box', verbose_name='Владелец сообщения', blank=True)
 	message_sender = models.ForeignKey(Dealer,related_name='sender', verbose_name='Отправитель', blank=True)
 	message_reciver = models.ForeignKey(Dealer,related_name='reciver', verbose_name='Получатель', blank=True)
 	date = models.DateTimeField(verbose_name='Время отправки')
 	text = models.TextField(max_length=MAX_MESSAGE_LENGTH,verbose_name='Текст сообщения')
-	message_state = models.IntegerField(verbose_name='Статус сообщения')
+	message_state = models.IntegerField(verbose_name='Статус сообщения', choices=MESSAGE_STATES )
 
 	def __unicode__(self):
 		return self.date+':'+self.sender.name+'-'+self.reciver.name+':'+self.text[:20]
@@ -94,13 +95,13 @@ class Comment(models.Model):
 
 
 class Contact(models.Model):
-	# contact_kinds = (
-	# 		(0,'телефон'),
-	# 		(1,'профиль в соцсети'),
-	# 		(2,'почта'),
-	# 		(3,'IRC'),
-	# 	)
-	contact_kind = models.IntegerField(verbose_name='Тип контакта')
+	CONTACT_KINDS = (
+			(0,'телефон'),
+			(1,'профиль в соцсети'),
+			(2,'почта'),
+			(3,'IRC'),
+		)
+	contact_kind = models.IntegerField(verbose_name='Тип контакта', choices=CONTACT_KINDS )
 	value = models.CharField(max_length=MAX_CONTACTS_LENGTH,verbose_name='Контакт')
 
 	def __unicode__(self):
