@@ -1,11 +1,15 @@
 # Django settings for juniorlance project.
 
+import os 
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
+
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__)).rpartition("/")[0]
 
 MANAGERS = ADMINS
 
@@ -49,7 +53,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = PROJECT_ROOT+'/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -60,7 +64,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = PROJECT_ROOT+'/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -154,9 +158,34 @@ LOGGING = {
     }
 }
 
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    # 'DEFAULT_MODEL_SERIALIZER_CLASS':
+    #     'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
+import djcelery
+djcelery.setup_loader()
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+
+THIRD_PART_APPS = (
+        'djcelery',
+        'djkombu',
+        'rest_framework',
+        'rest_framework_docs',
+    )
 
 MY_INSTALLED_APPS = (
         'board',
     )
 
-INSTALLED_APPS += MY_INSTALLED_APPS
+INSTALLED_APPS += MY_INSTALLED_APPS + THIRD_PART_APPS
