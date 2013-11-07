@@ -45,7 +45,6 @@ class Vacancy(models.Model):
 	location = models.ForeignKey('City',verbose_name='Город')
 	skills = models.ManyToManyField('Skill',verbose_name='Требования')
 	cost = models.PositiveIntegerField(verbose_name='Цена', blank=True)
-	contacts = models.ManyToManyField('Contact', verbose_name='Контакты')
 	state = models.IntegerField(verbose_name='Статус')
 	expieres = models.DateTimeField(verbose_name='Строк окончания', blank=True)
 
